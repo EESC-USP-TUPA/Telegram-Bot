@@ -16,12 +16,12 @@ def get_subtasks(data: list, pos: int, counter: int) -> tuple[str, int, int]:
 
 
 def get_task_lister_text(system: str, subsystem: str) -> str:
-    if system == "ele":
-        name = systems["ele"]["sub"][subsystem]["name"]
-        ss = systems["ele"]["ss"].sheet(subsystem)
-    else:
-        name = systems["mec"]["sub"][subsystem]["name"]
-        ss = systems["mec"]["ss"].sheet(subsystem)
+    # if system == "ele":
+    name = systems[system]["sub"][subsystem]["name"]
+    ss = systems[system]["ss"].sheet(subsystem)
+    # else:
+    # name = systems["mec"]["sub"][subsystem]["name"]
+    # ss = systems["mec"]["ss"].sheet(subsystem)
 
     data = ss.get_all_values()
     string = f"<b>Subsistema: {name}</b>\n\n<u>Tarefas</u>\n"
@@ -83,8 +83,10 @@ def task_lister(update: Update, ctx: CallbackContext, args: list[str]) -> None:
 
 
 def subsystem_task_lister(update: Update, ctx: CallbackContext) -> None:
-    args = ctx.args
-    if not args:
+    if args := ctx.args:
+        task_lister(update, ctx, args)
+
+    else:
         systems = [
             [
                 InlineKeyboardButton("Elétrica", callback_data="list ele"),
@@ -97,9 +99,6 @@ def subsystem_task_lister(update: Update, ctx: CallbackContext) -> None:
             reply_markup=InlineKeyboardMarkup(systems),
             parse_mode=ParseMode.HTML,
         )
-
-    else:
-        task_lister(update, ctx, args)
 
 
 def query_handler(update: Update, ctx: CallbackContext) -> None:

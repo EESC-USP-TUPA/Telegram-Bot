@@ -1,4 +1,4 @@
-from telegram import Update, ParseMode
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, ParseMode
 from telegram.ext import CallbackContext
 from spreadsheet import commands
 from config import COMMANDS_SHEET_ID
@@ -10,9 +10,19 @@ def log_command(cmd: str) -> None:
     print(f"\n  [!!] Command {cmd} called")
 
 
-# Default message senting method, using HTML format
+# Default message sending method, using HTML format
 def send_message(update: Update, ctx: CallbackContext, text: str) -> None:
     ctx.bot.send_message(chat_id=update.effective_chat.id, text=text, parse_mode=ParseMode.HTML)
+
+
+# Creates keyboard with default configuration
+def create_keyboard(keyboard_list: list) -> ReplyKeyboardMarkup:
+    return ReplyKeyboardMarkup(keyboard_list, one_time_keyboard=True)
+
+
+# Message sending method with embedded keyboards
+def send_keyboard_message(update: Update, text: str, keyboard=ReplyKeyboardRemove()):
+    update.message.reply_text(text, reply_markup=keyboard, parse_mode=ParseMode.HTML)
 
 
 # Gets text from commands listed in Bot Commands spreadsheet

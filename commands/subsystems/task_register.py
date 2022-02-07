@@ -16,7 +16,14 @@ from datetime import date
 from unidecode import unidecode
 from commands.general import log_command
 from spreadsheet import Spreadsheet, systems
+from commands.general import create_keyboard, send_keyboard_message
 from commands.subsystems.generic import get_default_system_message, timeout, cancel
+
+"""
+Task Creation file
+Creates a conversation with user to prompt for new task info
+When finished, the new task is inserted directly in Google Spreadsheet
+"""
 
 # States of conversation
 [
@@ -28,60 +35,55 @@ from commands.subsystems.generic import get_default_system_message, timeout, can
     DURATION,
     DOC_QUESTION,
     DOCUMENTS,
+    NOTES,
     CONFIRMATION,
-] = range(9)
+] = range(10)
+
 
 # New task info
 task_info = {
-    "system": "",
-    "subsystem": "",
-    "project": "",
-    "new_project": False,
-    "task": "",
-    "diff": "",
-    "duration": "",
-    "docs": "",
+    "system": str,
+    "subsystem": str,
+    "project": str,
+    "new_project": bool,
+    "task": str,
+    "diff": str,
+    "duration": str,
+    "docs": str,
+    "notes": str,
 }
 
 # New task env info
-new_task = {"ss": Spreadsheet, "dict": None, "task": task_info, "proj": ""}
+new_task = {"ss": Spreadsheet, "dict": dict, "task": task_info, "proj": list}
 
 
 def add_task(update: Update, ctx: CallbackContext) -> int:
     log_command("register")
-    system_selector = [["ele", "mec"]]
-    update.message.reply_text(
-        get_default_system_message("Adicionar tarefa", ""),
-        reply_markup=ReplyKeyboardMarkup(system_selector, one_time_keyboard=True),
-        parse_mode=ParseMode.HTML,
-    )
+    description = "Adiciona uma nova tarefa na planilha de atividades do subsistema"
+    text = get_default_system_message("Adicionar tarefa", description)
+    send_keyboard_message(update, text, create_keyboard([["ele", "mec"]]))
     return SYSTEM
 
 
 def system(update: Update, ctx: CallbackContext) -> int:
     system = update.message.text
     if system == "ele":
-        subsystem_selector = [["bt", "pt"], ["hw", "sw"]]
+        subsystems = [["bt", "pt"], ["hw", "sw"]]
     elif system == "mec":
-        subsystem_selector = [["ch"]]
+        subsystems = [["ch"]]
+
     else:
-        update.message.reply_text("Sistema não encontrado", reply_markup=ReplyKeyboardRemove())
+        send_keyboard_message(text="Sistema não encontrado")
         return ConversationHandler.END
 
     global new_task
-    new_task["task"]["system"] = system
-    if system == "ele":
-        new_task["dict"] = systems["ele"]["sub"]
-        new_task["ss"] = systems["ele"]["ss"]
-    else:
-        new_task["dict"] = systems["mec"]["sub"]
-        new_task["ss"] = systems["mec"]["ss"]
+    keyboard = create_keyboard(subsystems)
 
-    update.message.reply_text(
-        "Informe o subsistema",
-        reply_markup=ReplyKeyboardMarkup(subsystem_selector, one_time_keyboard=True),
-        parse_mode=ParseMode.HTML,
-    )
+    new_task["task"]["system"] = system
+    new_task["dict"] = systems[system]["sub"]
+    new_task["ss"] = systems[system]["ss"]
+
+    send_keyboard_message(update, "Informe o subsistema", keyboard)
     return SUBSYSTEM
 
 
