@@ -4,7 +4,7 @@ from json import dump
 import psycopg2
 from dotenv import load_dotenv
 
-import database.connection as connection
+# import database.connection as connection
 from google.spreadsheet import SHEET_SCOPE, SHEET_AUTH_FILE, Spreadsheet, ElectricSpreadsheet
 from utils import electric_subsystems, mechanics_subsystem
 
@@ -99,14 +99,14 @@ systems = {
 """
 Database connection
 """
-con = connection.Connection(debug=True)
-database_configuration = open("database/default_configuration.sql").read()
+# con = connection.Connection(debug=True)
+# database_configuration = open("database/default_configuration.sql").read()
 
-if RELOAD_DATABASE:
-    con.exec_and_commit("DROP SCHEMA public CASCADE;")
-    con.exec_and_commit("CREATE SCHEMA public;")
-try:
-    con.exec_and_commit(database_configuration)
-    print("  [!!] Default configuration loaded")
-except psycopg2.Error:
-    pass
+# if RELOAD_DATABASE:
+#     con.exec_and_commit("DROP SCHEMA public CASCADE;")
+#     con.exec_and_commit("CREATE SCHEMA public;")
+# try:
+#     con.exec_and_commit(database_configuration)
+#     print("  [!!] Default configuration loaded")
+# except psycopg2.Error:
+#     pass

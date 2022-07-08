@@ -3,6 +3,7 @@ from telegram.ext import CommandHandler, CallbackQueryHandler
 import commands.general as general
 import commands.help as help_cmd
 import commands.report as report
+import commands.salinha as salinha
 import commands.subsystems.task_conclude as task_conclude
 import commands.subsystems.task_list as task_list
 import commands.subsystems.task_register as task_register
@@ -19,6 +20,7 @@ def register_commands(dsp) -> None:
 
     dsp.add_handler(CommandHandler("planilha", general.send_sheet))
     dsp.add_handler(CommandHandler("refresh", general.update_sheet_commands))
+    dsp.add_handler(CommandHandler("salinha", salinha.salinha))
 
     dsp.add_handler(CallbackQueryHandler(task_list.query_handler))
     dsp.add_handler(task_register.register_handler)

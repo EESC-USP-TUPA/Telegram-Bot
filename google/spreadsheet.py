@@ -51,11 +51,11 @@ class Spreadsheet:
         sheet_name - str: Identifier that will be used to access worksheet
         worksheet_id - str: Identifier of worksheet
         """
-        self.sheets[sheet_name] = self.ss.get_worksheet_by_id(worksheet_id)
+        self.sheets[sheet_name] = self.ss.get_worksheet(worksheet_id)
         if self.__debug:
             print(f"  [!!] Added sheet {sheet_name}")
 
-    def sheet(self, sheet_name: str) -> gspread.worksheet.Worksheet:
+    def sheet(self, sheet_name: str) -> gspread.Worksheet:
         """
         Returns a specific worksheet
 
