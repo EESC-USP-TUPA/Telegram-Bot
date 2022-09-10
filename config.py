@@ -99,14 +99,14 @@ systems = {
 """
 Database connection
 """
-con = connection.Connection(debug=True)
-database_configuration = open("database/default_configuration.sql").read()
+# con = connection.Connection(debug=True)
+# database_configuration = open("database/default_configuration.sql").read()
 
-if RELOAD_DATABASE:
-    con.exec_and_commit("DROP SCHEMA public CASCADE;")
-    con.exec_and_commit("CREATE SCHEMA public;")
-try:
-    con.exec_and_commit(database_configuration)
-    print("  [!!] Default configuration loaded")
-except psycopg2.Error:
-    pass
+# if RELOAD_DATABASE:
+#     con.exec_and_commit("DROP SCHEMA public CASCADE;")
+#     con.exec_and_commit("CREATE SCHEMA public;")
+# try:
+#     con.exec_and_commit(database_configuration)
+#     print("  [!!] Default configuration loaded")
+# except psycopg2.Error:
+#     pass
